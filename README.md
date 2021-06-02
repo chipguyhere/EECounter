@@ -38,7 +38,7 @@ Each call to ```increment()``` typically erases or writes exactly one byte of EE
 
 This class implements a circular journal over the range of the EEPROM.  It erases and writes bytes in separate steps.
 Direct register access is used to gain access to writing partial bytes (individual bits) at a time.
-Selective erasing is part of the counting strategy.
+Selective erasing is part of the counting strategy, so a call to ```increment()``` will often do its job by erasing a byte.
 
 ## Tips
 
