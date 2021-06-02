@@ -34,11 +34,14 @@ part or all of the range.
 
 ## Background
 
-Each call to ```increment()``` typically erases or writes exactly one byte of EEPROM, and is essentially atomic.
+Each call to ```increment()``` typically erases or writes exactly one byte of EEPROM.  It's probably atomic.
 
-This class implements a circular journal over the range of the EEPROM.  It erases and writes bytes in separate steps.
-Direct register access is used to gain access to writing partial bytes (individual bits) at a time.
-Selective erasing is part of the counting strategy.  Most of the time, ```increment()``` erases one byte or flips one bit.
+This class implements a circular journal over the assigned portion of the EEPROM.  Bytes take turns being part of the "tallies" (which
+are flipped bit-by-bit or erased to count increments) or the "checkpoint" (the starting point from which the tallies are counted).
+Direct register access is used to gain access to writing partial bytes (individual bits) at a time, and to erase
+and write bytes in separate steps.
+
+
 
 ## Tips
 
@@ -47,9 +50,4 @@ project drives relays, motors, or electromagnetic loads, these produce strong vo
 more information on this).  Those surges will corrupt EEPROM if they reach the Arduino's processor.
 
 Avoid using EEPROM location 0.  On Arduino, it is most likely to get corrupted during power offs.  Consider it a burner location.
-
-There is a secondary mode for ```begin```: ```begin(true)```.
-This will perform one "test" increment of the counter, and then verify that the EEPROM
-reads correctly with the new count.  If it does not, the counter will be re-initialized with the anticipated value.  Note
-that this permanently increments the counter and should only be used where continuity is preferable to
 
