@@ -34,7 +34,8 @@ part or all of the range.
 
 ## Background
 
-Each call to ```increment()``` typically erases or writes exactly one byte of EEPROM.  It's probably atomic.
+Each call to ```increment()``` typically erases or writes (not both) exactly one byte of EEPROM.  It's probably atomic.  The algorithm
+incorporates the erase step as a countable event so that an immediate write-after-erase is never necessary.
 
 This class implements a circular journal over the assigned portion of the EEPROM.  Bytes take turns being part of the "tallies" (which
 are flipped bit-by-bit or erased to count increments) or the "checkpoint" (the starting point from which the tallies are counted).
